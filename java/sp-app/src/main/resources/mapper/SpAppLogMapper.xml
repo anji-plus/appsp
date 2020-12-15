@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anji.sp.mapper.SpAppLogMapper">
+
+    <select id="getDeviceIdCount" parameterType="com.anji.sp.model.vo.SpAppLogVO"
+            resultType="java.lang.Long">
+    select COUNT(DISTINCT device_id) from sp_app_log where app_key=#{appKey} and platform=#{platform}
+    </select>
+
+</mapper>

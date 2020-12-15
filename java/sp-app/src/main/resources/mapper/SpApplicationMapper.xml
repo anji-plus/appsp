@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anji.sp.mapper.SpApplicationMapper">
+
+<!--    <select id="selectMenuListByRoleId" parameterType="java.lang.Long"-->
+<!--            resultType="com.anji.sp.model.vo.SpRoleMenuVO">-->
+<!--    select rm.id, rm.role_id, rm.menu_id, r.role_name, m.`name` menu_name from sp_role_menu rm-->
+<!--	LEFT JOIN sp_role r on r.role_id=rm.role_id-->
+<!--	LEFT JOIN sp_menu m on m.menu_id=rm.menu_id-->
+<!--	WHERE rm.role_id =  #{roleId}-->
+<!--    </select>-->
+</mapper>

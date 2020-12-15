@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anji.sp.mapper.SpUserAppRoleMapper">
+
+    <select id="selectAppInfoByUserId" parameterType="com.anji.sp.model.vo.SpUserAppInfoVO"
+            resultType="com.anji.sp.model.vo.SpAppInfoVO">
+        select a.*, b.title operation_title,b.oper_name operation_name, b.oper_time operation_time FROM (select a.app_id, a.app_key, a.`name`,
+        ua.user_id user_id
+        from sp_user_app_role ua
+        LEFT JOIN sp_application a on ua.app_id=a.app_id
+        <where>
+            a.enable_flag = 1 and a.delete_flag = 0
+            <if test="userId !=null">
+                and user_id = #{userId, jdbcType=BIGINT}
+            </if>
+        </where>
+        ) a
+        LEFT JOIN
+        (select g.* FROM
+        (select s.app_id,MAX(s.oper_id) oper_id,MAX(s.oper_time) oper_time from sp_oper_log s GROUP BY s.app_id) log
+        LEFT JOIN sp_oper_log g on log.oper_id = g.oper_id) b
+        on a.app_id=b.app_id
+    </select>
+
+    <select id="selectAppInfoByAdmin" parameterType="com.anji.sp.model.vo.SpUserAppInfoVO"
+            resultType="com.anji.sp.model.vo.SpAppInfoVO">
+    select a.*, b.title operation_title, b.oper_name operation_name,b.oper_time operation_time FROM (
+	select a.app_id, a.app_key, a.`name` from  sp_application a where a.enable_flag = 1 and a.delete_flag = 0) a
+	LEFT JOIN (select g.*  FROM (select s.app_id,MAX(s.oper_id) oper_id,MAX(s.oper_time) oper_time from sp_oper_log s GROUP BY s.app_id) log
+	LEFT JOIN sp_oper_log g on log.oper_id = g.oper_id) b on a.app_id=b.app_id
+    </select>
+
+
+    <select id="selectMenuPermissionsByAppIDAndUserId" parameterType="com.anji.sp.model.vo.SpUserAppInfoVO"
+            resultType="com.anji.sp.model.vo.SpMenuVO">
+		select m.*  from sp_user_app_role uar
+		LEFT JOIN sp_role_menu  rm on rm.role_id = uar.role_id
+		LEFT JOIN sp_menu m on m.menu_id = rm.menu_id
+		where app_id = #{appId, jdbcType=BIGINT} and user_id = #{userId, jdbcType=BIGINT}
+	</select>
+
+
+    <select id="selectUserMenuPerms" parameterType="com.anji.sp.model.vo.SpUserMenuVO"
+            resultType="com.anji.sp.model.vo.SpUserMenuVO">
+		select uar.user_id, uar.app_id, uar.role_id, m.menu_id, m.`name` menu_name, m.perms from sp_user_app_role uar
+		LEFT JOIN sp_role_menu rm on rm.role_id = uar.role_id
+		LEFT JOIN sp_menu m on m.menu_id = rm.menu_id
+		where user_id = #{userId, jdbcType=BIGINT}
+	</select>
+
+
+</mapper>

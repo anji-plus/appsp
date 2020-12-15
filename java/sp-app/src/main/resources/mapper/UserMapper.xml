@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.anji.sp.mapper.UserMapper">
+
+    <!--    <select id="selectMenuListByRoleId" parameterType="java.lang.Long"-->
+    <!--            resultType="com.anji.sp.model.vo.SpRoleMenuVO">-->
+    <!--    select rm.id, rm.role_id, rm.menu_id, r.role_name, m.`name` menu_name from sp_role_menu rm-->
+    <!--	LEFT JOIN sp_role r on r.role_id=rm.role_id-->
+    <!--	LEFT JOIN sp_menu m on m.menu_id=rm.menu_id-->
+    <!--	WHERE rm.role_id =  #{roleId}-->
+    <!--    </select>-->
+
+    <select id="selectNoJoinApplicationByAppId" parameterType="com.anji.sp.model.vo.SpApplicationVO"
+            resultType="com.anji.sp.model.vo.SpUserVO">
+        select user_id, `name`, username from sp_user
+        where is_admin=0 and enable_flag=1 and delete_flag=0 and user_id
+        not in(select user_id from sp_user_app_role where app_id=#{appId})
+        <if test="name != null and name !=''">
+            and name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+        </if>
+    </select>
+
+
+    <select id="selectUserAppRoleByAppId" parameterType="java.lang.Long"
+            resultType="com.anji.sp.model.vo.SpUserAppInfoVO">
+        select u.user_id user_id, uar.app_id app_id, uar.id user_app_role_id, u.username username, u.`name` `name`, r.role_id role_id,  r.role_name role_name  from sp_user u
+        LEFT JOIN sp_user_app_role uar on u.user_id=uar.user_id
+	    LEFT JOIN sp_role r on r.role_id=uar.role_id
+	    WHERE uar.app_id=#{appId}
+    </select>
+
+
+</mapper>

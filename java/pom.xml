@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.anji</groupId>
+    <artifactId>sp-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>sp-parent</name>
+    <packaging>pom</packaging>
+    <description>移动服务平台</description>
+
+    <modules>
+        <module>sp-common</module>
+        <module>sp-auth</module>
+        <module>sp-notice</module>
+        <module>sp-version</module>
+        <module>sp-app</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring.boot.version>2.2.5.RELEASE</spring.boot.version>
+        <pagehelper.spring.boot.starter.version>1.2.13</pagehelper.spring.boot.starter.version>
+        <fastjson.version>1.2.70</fastjson.version>
+        <druid.version>1.1.14</druid.version>
+        <commons.io.version>2.5</commons.io.version>
+        <commons.fileupload.version>1.3.3</commons.fileupload.version>
+        <bitwalker.version>1.19</bitwalker.version>
+        <jwt.version>0.9.0</jwt.version>
+        <swagger.version>2.9.2</swagger.version>
+        <poi.version>3.17</poi.version>
+        <oshi.version>3.9.1</oshi.version>
+        <velocity.version>1.7</velocity.version>
+        <apk.parser.version>2.6.10</apk.parser.version>
+        <redisson.version>3.6.5</redisson.version>
+        <mybatis.plus.boot.starter.version>3.3.2</mybatis.plus.boot.starter.version>
+        <checkstyle.config.location>/code_template/allways_checkstyle.xml</checkstyle.config.location>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- SpringBoot的依赖配置-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- SpringBoot 核心包 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+
+        <!-- apk解析包 -->
+        <dependency>
+            <groupId>net.dongliu</groupId>
+            <artifactId>apk-parser</artifactId>
+            <version>${apk.parser.version}</version>
+        </dependency>
+
+        <!-- 解析客户端操作系统、浏览器等 -->
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>${bitwalker.version}</version>
+        </dependency>
+
+        <!-- SpringBoot 测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- SpringBoot 拦截器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- SpringBoot Web容器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- spring security 安全认证 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- redis 缓存操作 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- redisson 分布式锁-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
+        </dependency>
+
+        <!-- pool 对象池 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <!--常用工具类 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- Mysql驱动包 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- SpringBoot集成mybatis框架 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis.plus.boot.starter.version}</version>
+        </dependency>
+
+        <!-- pagehelper 分页插件 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper.spring.boot.starter.version}</version>
+        </dependency>
+
+        <!--阿里数据库连接池 -->
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba</groupId>-->
+<!--            <artifactId>druid-spring-boot-starter</artifactId>-->
+<!--            <version>${druid.version}</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.22</version>
+        </dependency>
+
+        <!--io常用工具类 -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
+        </dependency>
+
+        <!--文件上传工具类 -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${commons.fileupload.version}</version>
+        </dependency>
+
+        <!-- 阿里JSON解析器 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <!--Spring框架基本的核心工具-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+
+
+        <!--Token生成与解析-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jwt.version}</version>
+        </dependency>
+
+
+        <!--防止进入swagger页面报类型转换错误，排除2.9.2中的引用，手动增加1.5.21版本-->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.21</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.5.21</version>
+        </dependency>
+
+        <!-- swagger2-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-models</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- swagger2-UI-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+
+        <!--通过ip查询地址-->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>1.7</version>
+        </dependency>
+
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.anji-plus</groupId>
+            <artifactId>captcha-spring-boot-starter</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+
+    </dependencies>
+
+
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-site-plugin</artifactId>-->
+<!--            </plugin>-->
+
+<!--            &lt;!&ndash; checkstyle &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-checkstyle-plugin</artifactId>-->
+<!--                <version>3.0.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>compile</id>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <configLocation>${checkstyle.config.location}</configLocation>-->
+<!--                            <failOnViolation>true</failOnViolation>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>findbugs-maven-plugin</artifactId>-->
+<!--                <version>3.0.5</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>compile</id>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+
+<!--            &lt;!&ndash; PMD插件 &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-pmd-plugin</artifactId>-->
+<!--                <version>3.8</version>-->
+<!--                <configuration>-->
+<!--                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>-->
+<!--                    <targetJdk>${java.version}</targetJdk>-->
+<!--                    <printFailingErrors>true</printFailingErrors>-->
+<!--                    &lt;!&ndash; 代码检查规则 &ndash;&gt;-->
+<!--                    <rulesets>-->
+<!--                        <ruleset>rulesets/java/ali-comment.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-concurrent.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-constant.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-exception.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-flowcontrol.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-naming.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-oop.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-orm.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-other.xml</ruleset>-->
+<!--                        <ruleset>rulesets/java/ali-set.xml</ruleset>-->
+<!--                    </rulesets>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>pmd-check-verify</id>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                &lt;!&ndash; p3c依赖 &ndash;&gt;-->
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>com.alibaba.p3c</groupId>-->
+<!--                        <artifactId>p3c-pmd</artifactId>-->
+<!--                        <version>1.3.5</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+<!--            </plugin>-->
+
+<!--        </plugins>-->
+<!--    </build>-->
+
+
+</project>
