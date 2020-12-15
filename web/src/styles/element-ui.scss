@@ -1,0 +1,226 @@
+//to reset element-ui default css
+.el-select {
+  //width: calc(100% - 85px);
+}
+.el-upload {
+  input[type='file'] {
+    display: none !important;
+  }
+}
+
+.el-dialog__wrapper {
+  //  left: 200px;
+  //  top: 50px;
+  .el-dialog {
+    transform: none;
+    left: 0;
+    position: relative;
+    margin: 0 auto; //  margin-left: 200px;
+    .el-dialog__header {
+      padding: 10px 20px;
+      text-align: center;
+      background: #716aca;
+      span {
+        color: #ffffff;
+      }
+      .el-dialog__headerbtn {
+        top: initial;
+        .el-dialog__close {
+          color: #ffffff;
+        }
+      }
+    }
+    .el-dialog__body {
+      padding: 10px 20px;
+    }
+    .el-dialog__footer {
+      text-align: center;
+      padding: 10px 20px;
+    }
+  }
+}
+
+.el-upload__input {
+  display: none;
+} //暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461
+//element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+} // 表格样式
+
+.table-fixed {
+  /deep/ .el-table__fixed-right {
+    height: 100% !important; //设置高优先，以覆盖内联样式
+  }
+
+  /deep/ .el-table__fixed {
+    height: 100% !important; //设置高优先，以覆盖内联样式
+  }
+}
+
+.scf_table {
+  margin-bottom: 55px;
+  .has-gutter {
+    tr {
+      background: #f4f3fb;
+      th:first-child {
+        padding-left: 20px;
+      }
+    }
+  }
+  .el-table__body-wrapper {
+    table {
+      tbody {
+        tr {
+          td:first-child {
+            padding-left: 20px;
+          }
+        }
+      }
+    }
+  }
+  .el-table__fixed {
+    // .el-table__body {
+    //   td {
+    //     border-bottom: 0.5px solid #ebeef5;
+    //   }
+    // }
+    .el-table__header {
+      thead {
+        tr {
+          background-color: #f4f3fb;
+        }
+      }
+    }
+  }
+  .el-table__fixed-right {
+    .el-table__header {
+      thead {
+        tr {
+          background-color: #f4f3fb;
+        }
+      }
+    }
+  }
+} //树形图
+.el-tree {
+  // margin-top: 20px;
+  .el-tree-node__content {
+    height: 25px;
+  }
+} //模态框
+
+.el-scrollbar {
+  > .el-scrollbar__wrap {
+    margin-bottom: -8px !important;
+  }
+  > .el-autocomplete-suggestion__wrap {
+    max-height: 295px !important;
+  }
+} // 时间选择框
+.el-picker-panel__body {
+  .el-date-picker__header {
+    margin: 6px 12px 0 !important;
+  }
+  .el-picker-panel__content {
+    margin: 0 15px !important;
+    .el-date-table {
+      .available {
+        padding: 0 !important;
+      }
+      .prev-month {
+        padding: 0 !important;
+      }
+      .next-month {
+        padding: 0 !important;
+      }
+    }
+  }
+  .el-date-range-picker__content {
+    margin: 0 !important;
+  }
+}
+
+.el-loading-mask {
+  z-index: 999 !important;
+}
+.el-table .el-tooltip {
+  text-align: left;
+}
+.el-timeline-item__node--large,
+.el-timeline-item__node--normal {
+  top: 20px;
+}
+//.el-timeline-item__tail{
+//  height: 120px;
+//}
+.el-range-editor.el-input__inner {
+  width: 100%;
+}
+.el-timeline-item__tail {
+  top: 30px;
+}
+.el-table td,
+.el-table th {
+  padding: 4px 0;
+}
+.el-table .cell {
+  padding: 0 10px;
+}
+.el-button--warning {
+  color: #fff;
+  background-color: #ffb803;
+  border-color: #ffb803;
+}
+.el-button--primary {
+  color: #fff;
+  background-color: #0384ff;
+  border-color: #0384ff;
+}
+.el-button--success {
+  color: #fff;
+  background-color: #c57fff;
+  border-color: #c57fff;
+}
+.el-button--success:hover {
+  color: #fff;
+  background-color: #c57fff;
+  border-color: #c57fff;
+}
+.el-button--info {
+  color: #fff;
+  background-color: #4c7abb;
+  border-color: #4c7abb;
+}
+// .el-input__inner {
+  // height: 30px;
+  // line-height: 30px;
+// }
+.el-button {
+  padding: 8px 10px;
+}
+.el-table .cell .el-button{
+  padding: 0 10px;
+  height: 23px;
+  line-height: 23px;
+}
+.el-select-dropdown__list {
+  padding: 0;
+}
+.el-date-editor .el-range__icon {
+  line-height: 25px;
+}
+.el-date-editor .el-range-separator {
+  line-height: 24px;
+  width:15%;
+}
+.el-breadcrumb__inner a,
+.el-breadcrumb__inner.is-link {
+  font-weight: 100 !important;
+}
