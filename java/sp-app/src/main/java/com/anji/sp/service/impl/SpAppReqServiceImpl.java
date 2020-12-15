@@ -256,14 +256,14 @@ public class SpAppReqServiceImpl implements SpAppReqService {
      */
     private boolean canaryReleaseConfig(SpAppLogVO spAppLogVO, SpVersionVO vo) {
 
-        //接口信息及版本信息 判断 deviceId、appkey、platform是否存在  不存在 不返回信息
+        //1、接口信息及版本信息 判断 deviceId、appkey、platform是否存在  不存在 不返回信息
         if (Objects.isNull(vo) || Objects.isNull(spAppLogVO)
                 || StringUtils.isEmpty(spAppLogVO.getDeviceId())
                 || StringUtils.isEmpty(spAppLogVO.getAppKey())
                 || StringUtils.isEmpty(spAppLogVO.getPlatform())) {
             return false;
         }
-        //Android
+        //2、Android
         if ("Android".equals(spAppLogVO.getPlatform())) {
             //数据中的versionNumber是否大于接口传过来的versionCode
             //app版本是否大于等于数据版本 跳过 返回信息
@@ -273,7 +273,7 @@ public class SpAppReqServiceImpl implements SpAppReqService {
                 return true;
             }
         }
-        // iOS
+        // 3、iOS
         if ("iOS".equals(spAppLogVO.getPlatform())) {
             // APP版本>= 数据版本 跳过
             if (StringUtils.isNotEmpty(spAppLogVO.getVersionName())
@@ -283,7 +283,7 @@ public class SpAppReqServiceImpl implements SpAppReqService {
             }
         }
 
-        //不开启灰度发布直接跳过 展示数据
+        //4、不开启灰度发布直接跳过 展示数据
         //开启时间没有直接跳过 展示数据
         //灰度发布时间超过7天直接跳过 展示数据
         if (vo.getCanaryReleaseEnable() == UserStatus.DISABLE.getIntegerCode()
@@ -349,13 +349,14 @@ public class SpAppReqServiceImpl implements SpAppReqService {
                 QueryWrapper<SpAppReleasePO> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("app_key", spAppLogVO.getAppKey());
                 queryWrapper.eq("version_name", vo.getVersionName());
+                //查询灰度发布已经收到版本更新接口的用户设备唯一标识表
                 List<SpAppReleasePO> spAppReleasePOS = spAppReleaseMapper.selectList(queryWrapper);
                 log.info("sql spAppReleasePOS: {}", spAppReleasePOS);
 
+                //将列表唯一标示转换为 string list
                 List<String> cacheList =  spAppReleasePOS.stream().map(s -> s.getDeviceId()).collect(Collectors.toList());
                 log.info("sql cacheList: {}", cacheList);
 
-//                List<String> cacheList = redisService.getCacheList(cacheKey);
                 //为空代表没有数据需要添加
                 if (StringUtils.isEmpty(cacheList) || cacheList.size() == 0) {
                     int i = insertReleasePO(spAppLogVO, vo);
