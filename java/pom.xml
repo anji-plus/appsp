@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.anji</groupId>
     <artifactId>sp-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${app.sp.version}</version>
     <name>sp-parent</name>
     <packaging>pom</packaging>
     <description>移动服务平台</description>
@@ -20,6 +20,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <app.sp.version>1.0.0</app.sp.version>
         <java.version>1.8</java.version>
         <spring.boot.version>2.2.5.RELEASE</spring.boot.version>
         <pagehelper.spring.boot.starter.version>1.2.13</pagehelper.spring.boot.starter.version>
