@@ -17,7 +17,7 @@
     <parent>
         <groupId>com.anji</groupId>
         <artifactId>sp-parent</artifactId>
-        <version>${app.sp.version}</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>sp-common</artifactId>
     <name>sp-common</name>

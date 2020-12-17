@@ -8,6 +8,7 @@ import org.redisson.config.ClusterServersConfig;
 import org.redisson.config.Config;
 import org.redisson.config.ReadMode;
 import org.redisson.config.SentinelServersConfig;
+import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class RedissonConfig {
     @Value("${spring.redis.port:}")
     private String port;
 
-    @Value("${spring.redis.password}")
+    @Value("${spring.redis.password:}")
     private String password;
 
     @Value("${spring.redis.cluster.nodes:}")
@@ -38,9 +39,9 @@ public class RedissonConfig {
     @Value("${spring.redis.sentinel.master:}")
     private String redisSentinelMaster;
 
-    @Value("${spring.redis.timeout}")
+    @Value("${spring.redis.timeout:}")
     private String timeout;
-    @Value("${spring.redis.database}")
+    @Value("${spring.redis.database:}")
     private String database;
 
 
@@ -70,9 +71,12 @@ public class RedissonConfig {
     public RedissonClient singleClient() {
         //单机模式 根据具体情况分析
         Config config = new Config();
-        config.useSingleServer()
-                .setAddress("redis://" + host + ":" + port)
-                .setPassword(password);
+        SingleServerConfig singleServerConfig = config.useSingleServer()
+                .setAddress("redis://" + host + ":" + port);
+        //哨兵模式
+            if (!StringUtils.isBlank(password)) {
+                singleServerConfig.setPassword(password);
+            }
         return Redisson.create(config);
     }
 

@@ -4,7 +4,7 @@
  Source Server         : sp_open
  Source Server Type    : MySQL
  Source Server Version : 50727
- Source Host           : 10.108.6.163:3306
+ Source Host           : 127.0.0.1:3306
  Source Schema         : open_app_sp_service_platform
 
  Target Server Type    : MySQL
@@ -13,7 +13,12 @@
 
  Date: 16/12/2020 15:43:54
 */
+-- 创建数据库
+CREATE DATABASE IF NOT EXISTS open_app_sp_service_platform DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+-- 使用数据库
+USE open_app_sp_service_platform;
 
+-- 开始创建对应表
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 

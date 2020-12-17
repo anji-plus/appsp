@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.anji</groupId>
         <artifactId>sp-parent</artifactId>
-        <version>${app.sp.version}</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>sp</artifactId>
     <name>sp</name>
@@ -17,12 +17,12 @@
         <dependency>
             <groupId>com.anji</groupId>
             <artifactId>sp-version</artifactId>
-            <version>${app.sp.version}</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.anji</groupId>
             <artifactId>sp-notice</artifactId>
-            <version>${app.sp.version}</version>
+            <version>1.0.0</version>
         </dependency>
         <!-- ********************* swagger导出PDF/HTML所需依赖 START ********************************* -->
         <!--        <dependency>-->
@@ -52,10 +52,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>com.anji.sp.SpAppApplication</mainClass>
-                    <layout>ZIP</layout>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
