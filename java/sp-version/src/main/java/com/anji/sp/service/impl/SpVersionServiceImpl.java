@@ -300,6 +300,8 @@ public class SpVersionServiceImpl implements SpVersionService {
             return "更新日志不能为空";
         } else if (StringUtils.isEmpty(reqData.getDownloadUrl())) {
             return "下载地址不能为空";
+        } else if (!APPVersionCheckUtil.isVersion(reqData.getVersionName())) {
+            return "版本名输入有误";
         } else if ("Android".contains(reqData.getPlatform()) && APPVersionCheckUtil.strToInt(reqData.getVersionNumber()) == 0 ) {
             return "版本号输入有误";
         }

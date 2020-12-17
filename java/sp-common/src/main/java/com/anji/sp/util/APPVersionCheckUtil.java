@@ -81,9 +81,9 @@ public class APPVersionCheckUtil {
      */
     public static boolean isVersion(String version) {
         String[] p = version.split("\\.");
-        if (p.length != 3) {
-            return false;
-        }
+//        if (p.length != 3) {
+//            return false;
+//        }
         for (String pp : p) {
             int val = 0;
             try {
