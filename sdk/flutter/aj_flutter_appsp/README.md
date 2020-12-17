@@ -490,4 +490,4 @@ import 'package:flutter/services.dart';
 ### iOS Plugin实现
 
 ## Flutter插件下载
-地址: [https://gitee.com/anji-plus/aj-appsp/flutter](https://gitee.com/anji-plus/aj-appsp/flutter)
+地址: [https://gitee.com/anji-plus/aj-appsp/sdk/flutter](https://gitee.com/anji-plus/aj-appsp/sdk/flutter)
