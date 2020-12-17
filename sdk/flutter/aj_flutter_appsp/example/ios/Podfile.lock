@@ -1,0 +1,47 @@
+PODS:
+  - aj_flutter_appsp (0.0.1):
+    - AJSDKAppSp
+    - Flutter
+  - AJSDKAppSp (0.0.1)
+  - Flutter (1.0.0)
+  - path_provider (0.0.1):
+    - Flutter
+  - permission_handler (3.3.0):
+    - Flutter
+  - url_launcher (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - aj_flutter_appsp (from `.symlinks/plugins/aj_flutter_appsp/ios`)
+  - Flutter (from `Flutter`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AJSDKAppSp
+
+EXTERNAL SOURCES:
+  aj_flutter_appsp:
+    :path: ".symlinks/plugins/aj_flutter_appsp/ios"
+  Flutter:
+    :path: Flutter
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
+  url_launcher:
+    :path: ".symlinks/plugins/url_launcher/ios"
+
+SPEC CHECKSUMS:
+  aj_flutter_appsp: 7f65a324b5b4e78ca99ecd75cad98fdc9e249902
+  AJSDKAppSp: 094bda41612ac5777b294068723c6967cf7fc98f
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
+  permission_handler: 67637977b227d62d46bfbf524f335f8568de5a73
+  url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
+
+PODFILE CHECKSUM: 124871c13717f2388253dcfb709d8627f84a282d
+
+COCOAPODS: 1.9.0
