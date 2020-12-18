@@ -12,8 +12,8 @@ package com.anji.appsp.sdk.http;
 
 public class AppSpRequestUrl {
     //基础地址，可改变，便于在开发/测试时配置，如果时生产，建议改成final，不允许改变
-    public static String Host = "https://appsp.anji-plus.com/sp/";
-    public static final String initDevice = "phone/deviceInit";
-    public static final String getAppVersion = "phone/appVersion";
-    public static final String getAppNotice = "phone/appNotice";
+    public static String Host = "http://open-appsp.anji-plus.com";
+    public static final String initDevice = "/sp/phone/deviceInit";
+    public static final String getAppVersion = "/sp/phone/appVersion";
+    public static final String getAppNotice = "/sp/phone/appNotice";
 }
