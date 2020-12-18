@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     var debuggable = !bool.fromEnvironment("dart.vm.product");
     await AjFlutterAppSp.init(
         appKey: "aadcfae6215a4e0f9bf5bc5edccb1045",
-        host: "http://open-appsp.anji-plus.com/sp/",
+        host: "http://open-appsp.anji-plus.com",
         debug: debuggable);
   }
 
