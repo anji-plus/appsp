@@ -1,6 +1,7 @@
 package com.anji.sp.service.impl;
 
 import com.anji.sp.enums.IsDeleteEnum;
+import com.anji.sp.enums.PlatformEnum;
 import com.anji.sp.enums.UserStatus;
 import com.anji.sp.mapper.SpVersionMapper;
 import com.anji.sp.model.PageQueryRep;
@@ -153,41 +154,12 @@ public class SpVersionServiceImpl implements SpVersionService {
 
 
         //新增对版本名版本号处理
-        List<SpVersionPO> spRolePOS = getAppVersion(reqData);
-        if (spRolePOS.size() > 0) {
-            SpVersionPO versionInfo = spRolePOS.get(0);
-            if (APPVersionCheckUtil.compareAppVersion(versionInfo.getVersionName(), reqData.getVersionName()) < 1) {
-                return ResponseModel.errorMsg("版本名不能低于" + versionInfo.getVersionName());
-            }
-
-            if ("Android".contains(reqData.getPlatform())) {
-                if (APPVersionCheckUtil.strToInt(versionInfo.getVersionNumber()) >= APPVersionCheckUtil.strToInt(reqData.getVersionNumber())) {
-                    return ResponseModel.errorMsg("版本号不能低于" + versionInfo.getVersionNumber());
-                }
-            }
-
+        String checkValid = checkUpdateVersion(reqData, 0);
+        if (StringUtils.isNotEmpty(checkValid)) {
+            return ResponseModel.errorMsg(checkValid);
         }
-
-        //灰度发布  默认canaryReleaseEnable == 0
-        if (Objects.nonNull(reqData.getCanaryReleaseEnable()) && reqData.getCanaryReleaseEnable() == 1) {
-            if (Objects.isNull(reqData.getCanaryReleaseStageList())) {
-                return ResponseModel.errorMsg("灰度发布选择项数据有误");
-            }
-            if (reqData.getCanaryReleaseStageList().size() != 7) {
-                return ResponseModel.errorMsg("灰度发布选择项数据有误");
-            }
-            if (reqData.getCanaryReleaseStageList().size() == 7) {
-                for (int i = 0; i < 7; i++) {
-                    if (Integer.parseInt(reqData.getCanaryReleaseStageList().get(i)) == 0) {
-                        return ResponseModel.errorMsg("灰度发布每个阶段不能为0");
-                    }
-                    //如果前者大于后者
-                    if (i > 0 && Integer.parseInt(reqData.getCanaryReleaseStageList().get(i - 1)) > (Integer.parseInt(reqData.getCanaryReleaseStageList().get(i)))) {
-                        return ResponseModel.errorMsg("灰度发布后一天的值不能小于前一天的");
-                    }
-                }
-            }
-        } else {
+        if (Objects.isNull(reqData.getCanaryReleaseEnable())
+                || reqData.getCanaryReleaseEnable() != 1) {
             reqData.setCanaryReleaseEnable(UserStatus.DISABLE.getIntegerCode());
             reqData.setCanaryReleaseStageList(null);
         }
@@ -238,19 +210,78 @@ public class SpVersionServiceImpl implements SpVersionService {
             reqData.setCanaryReleaseEnable(UserStatus.DISABLE.getIntegerCode());
         }
         SpVersionPO po = spVersionMapper.selectById(reqData.getId());
-        if (!StringUtils.equals(po.getDownloadUrl(), reqData.getDownloadUrl())) {
-            return ResponseModel.errorMsg("下载地址不能修改");
-        } else if (!StringUtils.equals(po.getVersionName(), reqData.getVersionName())) {
-            return ResponseModel.errorMsg("版本名不能修改");
-        } else if (!StringUtils.equals(po.getVersionNumber(), reqData.getVersionNumber())) {
-            return ResponseModel.errorMsg("版本号不能修改");
-        } else if ((po.getCanaryReleaseEnable() != reqData.getCanaryReleaseEnable())) {
-            return ResponseModel.errorMsg("灰度发布状态不能修改");
+        //发布状态为true  下载地址、版本名、版本号、灰度发布状态 不能修改
+        if (po.getPublished().intValue() == UserStatus.OK.getIntegerCode()) {
+            if (!StringUtils.equals(po.getDownloadUrl(), reqData.getDownloadUrl())) {
+                return ResponseModel.errorMsg("下载地址不能修改");
+            } else if (!StringUtils.equals(po.getVersionName(), reqData.getVersionName())) {
+                return ResponseModel.errorMsg("版本名不能修改");
+            } else if (!StringUtils.equals(po.getVersionNumber(), reqData.getVersionNumber())) {
+                return ResponseModel.errorMsg("版本号不能修改");
+            } else if ((po.getCanaryReleaseEnable() != reqData.getCanaryReleaseEnable())) {
+                return ResponseModel.errorMsg("灰度发布状态不能修改");
+            }
+        } else { //发布状态为false 需进行参数校验  设置灰度发布信息
+            String checkValid = checkUpdateVersion(reqData, 1);
+            if (StringUtils.isNotEmpty(checkValid)) {
+                return ResponseModel.errorMsg(checkValid);
+            }
+            if (Objects.isNull(reqData.getCanaryReleaseEnable())
+                    || reqData.getCanaryReleaseEnable() != 1) {
+                reqData.setCanaryReleaseEnable(UserStatus.DISABLE.getIntegerCode());
+                reqData.setCanaryReleaseStageList(null);
+            }
         }
+
         if (updateAppVersion(reqData) > 0) {
             return ResponseModel.success();
         }
         return ResponseModel.errorMsg("更新失败");
+    }
+
+    /**
+     *  情况下校验更新信息
+     * @param vo
+     * @param checkIndex 新增 校验第1条  更新校验第二条
+     * @return
+     */
+    private String checkUpdateVersion(SpVersionVO vo, int checkIndex) {
+        //新增对版本名版本号处理
+        List<SpVersionPO> spRolePOS = getAppVersion(vo);
+        if (spRolePOS.size() > checkIndex) {
+            SpVersionPO versionInfo = spRolePOS.get(checkIndex);
+            if (APPVersionCheckUtil.compareAppVersion(versionInfo.getVersionName(), vo.getVersionName()) < 1) {
+                return "版本名不能低于" + versionInfo.getVersionName();
+            }
+
+            if ("Android".contains(vo.getPlatform())) {
+                if (APPVersionCheckUtil.strToInt(versionInfo.getVersionNumber()) >= APPVersionCheckUtil.strToInt(vo.getVersionNumber())) {
+                    return "版本号不能低于" + versionInfo.getVersionNumber();
+                }
+            }
+        }
+        //灰度发布  默认canaryReleaseEnable == 0
+        if (Objects.nonNull(vo.getCanaryReleaseEnable()) && vo.getCanaryReleaseEnable() == 1) {
+            if (Objects.isNull(vo.getCanaryReleaseStageList())) {
+                return "灰度发布选择项数据有误";
+            }
+            if (vo.getCanaryReleaseStageList().size() != 7) {
+                return "灰度发布选择项数据有误";
+            }
+            if (vo.getCanaryReleaseStageList().size() == 7) {
+                for (int i = 0; i < 7; i++) {
+                    if (Integer.parseInt(vo.getCanaryReleaseStageList().get(i)) == 0) {
+                        return "灰度发布每个阶段不能为0";
+                    }
+                    //如果前者大于后者
+                    if (i > 0 && Integer.parseInt(vo.getCanaryReleaseStageList().get(i - 1)) > (Integer.parseInt(vo.getCanaryReleaseStageList().get(i)))) {
+                        return "灰度发布后一天的值不能小于前一天的";
+                    }
+                }
+            }
+        }
+
+        return "";
     }
 
     /**
@@ -263,11 +294,14 @@ public class SpVersionServiceImpl implements SpVersionService {
     public int updateAppVersion(SpVersionVO reqData) {
         SpVersionPO sp = new SpVersionPO();
         BeanUtils.copyProperties(reqData, sp);
+        //版本配置 系统版本
         sp.setVersionConfig(StringUtils.join(reqData.getVersionConfigStrList(), ","));
         if (Objects.isNull(reqData.getNeedUpdateVersionList())) {
             reqData.setNeedUpdateVersionList(new ArrayList<String>());
         }
+        //版本配置 APP版本
         sp.setNeedUpdateVersions(StringUtils.join(reqData.getNeedUpdateVersionList(), ","));
+        //灰度发布阶段
         sp.setCanaryReleaseStage(StringUtils.join(reqData.getCanaryReleaseStageList(), ","));
         sp.setUpdateBy(SecurityUtils.getUserId());
         sp.setUpdateDate(new Date());
@@ -302,7 +336,7 @@ public class SpVersionServiceImpl implements SpVersionService {
             return "下载地址不能为空";
         } else if (!APPVersionCheckUtil.isVersion(reqData.getVersionName())) {
             return "版本名输入有误";
-        } else if ("Android".contains(reqData.getPlatform()) && APPVersionCheckUtil.strToInt(reqData.getVersionNumber()) == 0 ) {
+        } else if ("Android".contains(reqData.getPlatform()) && APPVersionCheckUtil.strToInt(reqData.getVersionNumber()) == 0) {
             return "版本号输入有误";
         }
         return "";
@@ -369,6 +403,9 @@ public class SpVersionServiceImpl implements SpVersionService {
         updateWrapper.eq("enable_flag", UserStatus.OK.getIntegerCode());
         SpVersionPO po = new SpVersionPO();
         po.setEnableFlag(UserStatus.DISABLE.getIntegerCode());
+        //不管是否启用 都设置发布状态为true
+        spVersionPO.setPublished(UserStatus.OK.getIntegerCode());
+
         //更新所有状态为禁用状态
         spVersionMapper.update(po, updateWrapper);
         //更新启用单条数据
@@ -454,6 +491,7 @@ public class SpVersionServiceImpl implements SpVersionService {
 
     /**
      * 更新版本时间
+     *
      * @param vo
      * @return
      */
@@ -476,6 +514,36 @@ public class SpVersionServiceImpl implements SpVersionService {
         vo.setCanaryReleaseUseTime(newCanaryReleaseUseTime);
         return updateAppVersion(vo);
     }
+
+    /**
+     * 获取版本状态是否可以新增
+     *
+     * @param vo
+     * @return
+     */
+    public ResponseModel queryVersionState(SpVersionVO vo) {
+        if (Objects.isNull(vo.getAppId()) || vo.getAppId() <= 0) {
+            return ResponseModel.errorMsg("应用id不能为空");
+        } else if (StringUtils.isEmpty(vo.getPlatform())) {
+            return ResponseModel.errorMsg("平台名称不能为空");
+        } else if (!(PlatformEnum.iOS.getCode().contains(vo.getPlatform())
+                || PlatformEnum.Android.getCode().contains(vo.getPlatform()))) {
+            return ResponseModel.errorMsg("平F台名称不能为空");
+        }
+
+        QueryWrapper<SpVersionPO> wrapper = new QueryWrapper<>();
+//        //只需要查询未删除的
+        wrapper.eq("delete_flag", IsDeleteEnum.NOT_DELETE.getIntegerCode());
+        wrapper.eq("platform", vo.getPlatform());
+        wrapper.eq("app_id", vo.getAppId());
+        wrapper.eq("published", UserStatus.DISABLE.getIntegerCode());
+        Integer selectCount = spVersionMapper.selectCount(wrapper);
+        if (selectCount == 0) {
+            return ResponseModel.success();
+        }
+        return ResponseModel.errorMsg("有未发布版本，无法新增");
+    }
+
 
     /**
      * 删除无效apk文件

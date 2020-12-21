@@ -347,6 +347,7 @@ CREATE TABLE `sp_version` (
   `internal_url` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '内部下载url',
   `external_url` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '外部下载url',
   `version_config` varchar(500) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '版本配置（需要版本更新的版本号例如 10,11,12）',
+  `published` int(1) NOT NULL DEFAULT '0' COMMENT '发布状态',
   `enable_edit` int(1) NOT NULL DEFAULT '1' COMMENT '是否可编辑',
   `enable_flag` int(1) NOT NULL DEFAULT '1' COMMENT '启用状态',
   `delete_flag` int(1) NOT NULL DEFAULT '0' COMMENT '删除状态',

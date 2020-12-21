@@ -64,4 +64,12 @@ public class SpVersionController {
         return spVersionService.deleteVersion(versionVO);
     }
 
+
+    @ApiOperation(value = "查询是否可以新增版本", httpMethod = "POST")
+    @PostMapping("/queryVersionState/v1")
+    @PreSpAuthorize("system:user:version")
+    public ResponseModel queryVersionState(@RequestBody SpVersionVO versionVO) {
+        return spVersionService.queryVersionState(versionVO);
+    }
+
 }
