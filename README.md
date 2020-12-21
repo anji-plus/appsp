@@ -45,7 +45,8 @@
 #### 成员管理
 ![07](./img/md07.png)
 
-
+#### app演示
+![08](./img/appsp-app.gif)
 
 
 
