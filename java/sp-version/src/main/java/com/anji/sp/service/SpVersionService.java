@@ -51,6 +51,13 @@ public interface SpVersionService {
     ResponseModel deleteVersion(SpVersionVO reqData);
 
     /**
+     * 获取新版本状态 是否可以新增
+     * @param reqData
+     * @return
+     */
+    ResponseModel queryVersionState(SpVersionVO reqData);
+
+    /**
      * 启用或禁用版本
      *
      * @param reqData

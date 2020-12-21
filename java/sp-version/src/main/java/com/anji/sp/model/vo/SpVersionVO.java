@@ -46,6 +46,9 @@ public class SpVersionVO extends BaseVO implements Serializable {
     @ApiModelProperty("0--已禁用 1--已启用  是否可编辑 默认启用")
     private Integer enableEdit;
 
+    @ApiModelProperty("发布状态")
+    private Integer published;
+
 //    @ApiModelProperty("版本配置（需要版本更新的版本号例如: 1.1.1,1.1.2,1.1.3）")
 //    private String needUpdateVersions;
 

@@ -14,7 +14,7 @@ import java.util.Base64;
  */
 public class AESUtil {
     //密钥 (需要前端和后端保持一致)
-    private static final String KEY = "MaxDdDEoZkXka2eVk";
+    private static final String KEY = "WAxdEELMkXka9eVk";
     //算法
     private static final String ALGORITHMSTR = "AES/ECB/PKCS5Padding";
 
@@ -133,7 +133,7 @@ public class AESUtil {
      * 测试
      */
     public static void main(String[] args) throws Exception {
-        String content = "ASDFASDF";
+        String content = "ajplus";
         System.out.println("加密前：" + content);
         System.out.println("加密密钥和解密密钥：" + KEY);
         long start1 = System.currentTimeMillis();
