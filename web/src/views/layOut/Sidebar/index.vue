@@ -40,7 +40,6 @@ export default {
     },
   },
   created() {
-    console.log('菜单内容：', this.permission_routes)
   },
   methods: {
     logout() {

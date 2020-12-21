@@ -72,13 +72,11 @@ const permission = {
           // }
           let appinfo = JSON.parse(sessionStorage.getItem('APPINFO'))
           var perms = appinfo.perms
-          console.log('当前perms：', perms);
           const routes = perms.map(function(p){
             return appRoutes.find(function(r){
               return r.perms == p;
             });
           })
-          console.log('当前路由：', routes);
           //动态加权限
           currentRoutes= routes;
         }else {

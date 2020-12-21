@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <h1 class="title">{{appName}}</h1>
     <h1 class="title-item">应用信息</h1>
     <div class="top">
@@ -66,7 +66,7 @@
             <span style="margin-left: 10px;color: #5CC1FC" v-else>{{'已启用'}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="上下架" align="center">
+        <el-table-column label="上架" align="center">
           <template slot-scope="scope">
             <el-switch
               :value="scope.row.enableFlag == 0 ? false: true"
@@ -76,6 +76,11 @@
             </el-switch>
           </template>
         </el-table-column>
+        <el-table-column label="发布" align="center">
+          <template slot-scope="scope">
+            <span class="show2Lines" style="margin-left: 10px">{{ scope.row.published == 1 ? '是' : '否' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="280" align="left">
           <template slot-scope="scope">
             <el-button
@@ -83,7 +88,7 @@
               @click="handleView(scope.$index, scope.row)">查看
             </el-button>
             <el-button
-              size="mini" v-if="scope.row.enableFlag == 1"
+              size="mini" v-if="scope.row.enableFlag == 1 || scope.row.published == 0"
               @click="handleEdit(scope.$index, scope.row)">编辑
             </el-button>
             <!-- <el-button
@@ -108,7 +113,7 @@
 </template>
 
 <script>
-  import {getVersionTable, editVersionEnable, deleteVersion} from '@/api/appEdit'
+  import {getVersionTable, editVersionEnable, deleteVersion, checkVersionState} from '@/api/appEdit'
   import {getAppEnums, saveKeys} from '@/utils/enums'
   import store from '@/store'
 
@@ -124,6 +129,8 @@
         pageSize: 10,
         tableData: [],
 
+        // 页面是否正在加载
+        loading: false,
         // Table是否正在加载
         tableLoading: false,
         // 当前展示平台
@@ -165,10 +172,26 @@
         this.reload()
         this.$store.dispatch('versionTabChange', tab.index == 0 ? 'Android' : 'iOS');
       },
-      // 状态开关
+      // 启用状态开关点击
       handleSwitchChange(index) {
         var that = this
         var nData = that.tableData[index];
+        if (nData.published == 0) {
+          that.$confirm("第一次上架后，发布状态将置为'是'，并且不可逆，确认是否继续?", '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            that.switchOpening(nData)
+          }).catch(() => {
+                    
+          });
+        }else {
+          that.switchOpening(nData)
+        }
+      },
+      // 启用开关
+      switchOpening(nData) {
         var param = JSON.parse(JSON.stringify(nData));
         if (param.enableFlag == 1) {
           param.enableFlag = 0;
@@ -177,11 +200,9 @@
         }
         // console.log('nData.enableFlag ' + nData.enableFlag)
         editVersionEnable(param).then(response => {
-          that.reload();
-          console.log('开关请求成功');
+          this.reload();
         }).catch(error => {
-          reject(error)
-          console.log('开关请求失败');
+
         })
       },
       handleView(index, row) { //查看
@@ -189,7 +210,10 @@
         this.saveAppInfo(this.tableData[index], getAppEnums().SELELCT);
         this.$router.push({
           path: '/app/versionEdit',
-          query: {"data": this.tableData[index].platform, type: getAppEnums().SELELCT}
+          query: {
+            data: this.tableData[index].platform,
+            type: getAppEnums().SELELCT
+          }
         });
       },
       handleEdit(index, row) {
@@ -197,7 +221,10 @@
         this.saveAppInfo(this.tableData[index], getAppEnums().EDIT);
         this.$router.push({
           path: '/app/versionEdit',
-          query: {"data": this.tableData[index].platform, type: getAppEnums().EDIT}
+          query: {
+            data: this.tableData[index].platform,
+            type: getAppEnums().EDIT
+          }
         });
 
         // if (this.tableData[home].platform == "Android"){
@@ -237,50 +264,73 @@
       },
       // 新增安卓
       handleAndroid() {
-        let data = {
-          appId: this.appId,
-          platform: "Android",
-          downloadUrl: "",
-          versionName: "",
-          versionNumber: "",
-        };
-        this.saveAppInfo(data, getAppEnums().INSERT);
-        this.$router.push({
-          path: '/app/versionAddAndroid',
-          query: {
-            "data": {
-              "appId": this.appId,
-              "platform": "Android",
-              "downloadUrl": "",
-              "versionName": "",
-              "versionNumber": "",
-            }, type: getAppEnums().INSERT
-          }
-        });
-
+        this.checkVersionState().then(response => {
+          let data = {
+            appId: this.appId,
+            platform: "Android",
+            downloadUrl: "",
+            versionName: "",
+            versionNumber: "",
+          };
+          this.saveAppInfo(data, getAppEnums().INSERT);
+          this.$router.push({
+            path: '/app/versionAddAndroid',
+            query: {
+              "data": {
+                "appId": this.appId,
+                "platform": "Android",
+                "downloadUrl": "",
+                "versionName": "",
+                "versionNumber": "",
+              }, type: getAppEnums().INSERT
+            }
+          });
+        }).catch(error => {
+          
+        })
       },
       // 新增iOS
       handleiOS() {
-        let data = {
-          appId: this.appId,
-          platform: "iOS",
-          downloadUrl: "",
-          versionName: "",
-          versionNumber: "",
-        };
-        this.saveAppInfo(data, getAppEnums().INSERT);
-        this.$router.push({
-          path: '/app/versionAddiOS',
-          query: {
-            "data": {
-              "appId": this.appId,
-              "platform": "iOS",
-              "downloadUrl": "",
-              "versionName": "",
-              "versionNumber": "",
-            }, type: getAppEnums().INSERT
-          }
-        });
+        this.checkVersionState().then(response => {
+          let data = {
+            appId: this.appId,
+            platform: "iOS",
+            downloadUrl: "",
+            versionName: "",
+            versionNumber: "",
+          };
+          this.saveAppInfo(data, getAppEnums().INSERT);
+          this.$router.push({
+            path: '/app/versionAddiOS',
+            query: {
+              "data": {
+                "appId": this.appId,
+                "platform": "iOS",
+                "downloadUrl": "",
+                "versionName": "",
+                "versionNumber": "",
+              }, type: getAppEnums().INSERT
+            }
+          });
+        }).catch(error => {
+          
+        })
+      },
+      // 校验是否可以新增版本
+      checkVersionState() {
+        var that = this
+        return new Promise((resolve, reject) => {
+          that.loading = true
+          checkVersionState(that.appId, that.platform).then(response => {
+            console.log('222')
+            that.loading = false;
+            resolve(response)
+          }).catch(error => {
+            console.log('333')
+            that.loading = false;
+            reject(error)
+          })
+        })
       },
       getRowClass({ row, column, rowIndex, columnIndex }) {
           return "background:#EEF1FF;paddingTop: 20px;paddingBottom: 20px;";

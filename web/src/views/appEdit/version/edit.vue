@@ -12,11 +12,9 @@
           <label class="required-title">*</label>
           <label class="sub-title">下载地址</label>
         </div>
-        <!-- <el-input type="textarea" v-model="tableData.downloadUrl" placeholder="下载地址" :disabled="type==1"></el-input> -->
-        <input class="download-input" v-model="tableData.downloadUrl" placeholder="下载地址" :disabled="type!=2"/>
-        <!-- <el-input class="download-input" v-model="tableData.downloadUrl" placeholder="下载地址" :disabled="type==1"></el-input> -->
+        <input class="download-input" v-model="tableData.downloadUrl" placeholder="下载地址" :disabled="checkDisabled()"/>
         <el-upload
-          v-if="tableData.platform=='Android' && type==2"
+          v-if="tableData.platform=='Android' && showUploadBtn()"
           :show-file-list="false"
           :action="actionUp"
           :file-list="fileList"
@@ -36,13 +34,13 @@
             <label class="required-title">*</label>
             <label class="sub-title">版本名</label>
           </div>
-          <el-input class="short-input" v-model="tableData.versionName" onkeyup="value=value.replace(/[^\d\.]/g,'')" placeholder="版本名" :disabled="type!=2"></el-input>
+          <el-input class="short-input" v-model="tableData.versionName" onkeyup="value=value.replace(/[^\d\.]/g,'')" placeholder="版本名" :disabled="checkDisabled()"></el-input>
 
           <div class="sub-title-view">
             <label class="required-title" style="marginLeft: 30px">*</label>
             <label class="sub-title">版本号</label>
           </div>
-          <el-input class="short-input" v-model="tableData.versionNumber" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="版本号" :disabled="type!=2"></el-input>
+          <el-input class="short-input" v-model="tableData.versionNumber" onkeyup="value=value.replace(/[^\d]/g,'')" placeholder="版本号" :disabled="checkDisabled()"></el-input>
         </div>
         <div class="row">
           <div class="sub-title-view">
@@ -108,7 +106,7 @@
       </el-popconfirm>
 
       <el-switch style="marginLeft: 30px;"
-        v-model="needCanary" @change="releaseUpdateChange" :disabled="type!=2"
+        v-model="needCanary" @change="releaseUpdateChange" :disabled="checkDisabled()"
         active-text="">
       </el-switch>
     </div>
@@ -122,7 +120,7 @@
         <el-step :title="getCanaryValue(5)"></el-step>
         <el-step :title="getCanaryValue(6)"></el-step>
       </el-steps>
-      <el-button type="primary" icon="el-icon-edit" :disabled="type!=2" circle @click.prevent="showCanaryDialog = true"></el-button>
+      <el-button type="primary" icon="el-icon-edit" :disabled="checkDisabled()" circle @click.prevent="showCanaryDialog = true"></el-button>
     </div>
 
     <div class="row vCenter">
@@ -175,6 +173,8 @@
     data() {
       return {
         type: 0,
+        // 是否已经发布，如果未发布，则所有内容都能编辑
+        published: 0,
         actionUp: "/",
         fileList: [],
         uploadData: {},
@@ -232,8 +232,8 @@
       that.tableData = {};
       that.type = appDetail.type;
       that.tableData = appDetail.data;
+      that.published = that.tableData.published
       that.appName = info.appName;
-      console.log('info:', info)
       if (that.type == getAppEnums().INSERT) { //新增
         that.title = that.appName + "-" + that.tableData.platform + "新增"
       } else if (that.type == getAppEnums().EDIT) { //编辑
@@ -250,7 +250,6 @@
         that.tableData.options = iOSVersions;
         // that.tableData.options = store.getters.iOSVersions;
       }
-      console.log('所有系统版本：', that.tableData.options);
       let allValue = that.tableData.options.filter((item) => {
         return item.name == '全部';
       });
@@ -270,6 +269,8 @@
 
       that.getVersionList(that.tableData.appId, that.tableData.platform);
 
+      that.setCanarys()
+
       // 如果有灰度发布，计算已经过了几天
       if(that.tableData.canaryReleaseEnable > 0) {
         // 已经灰度发布了多少毫秒
@@ -287,6 +288,29 @@
     methods: {
       uploadUrl() {
 
+      },
+      // 校验目标是否可编辑
+      checkDisabled(){
+        if(this.published == 0) {
+          return false
+        }else {
+          if(this.type == 2) {
+            return false
+          }else {
+            return true
+          }
+        }
+      },
+      // 安卓的上传按钮是否显示
+      showUploadBtn() {
+        if(this.published == 0) {
+          return true
+        }else {
+          if(this.type == 2) {
+            return true
+          }
+        }
+        return false
       },
       // 获取app版本号
       getVersionList(appId, platform) {
@@ -357,7 +381,6 @@
       // 系统版本强更下拉框Change
       systemVersionSelectChange(results) {
         var that = this;
-        console.log('选中的系统版本:', results);
         const allValues = [];
         // 保留所有值
         for (const item of that.tableData.options) {
@@ -386,8 +409,6 @@
         that.tableData.versionConfigStrList = that.systemVersionList.filter((value) => {
           return value != '全部';
         });
-        console.log('选中的系统版本:', that.systemVersionList);
-        console.log('versionConfigStrList:', that.tableData.versionConfigStrList);
       },
       // 灰度发布开关Change
       releaseUpdateChange(value) {
@@ -464,6 +485,11 @@
       },
       // 灰度发布编辑框取消按钮
       handleCanaryCancel() {
+        this.setCanarys()
+        this.showCanaryDialog = false;
+      },
+      // 设置灰度发布编辑框的默认值
+      setCanarys() {
         var that = this;
         that.canaryForm.canarys = [];
         if(that.tableData.canaryReleaseStageList != null) {
@@ -471,7 +497,6 @@
         }else {
           that.canaryForm.canarys = that.canaryForm.canarys.concat(that.defaultCanarys);
         }
-        that.showCanaryDialog = false;
       },
       // 提交之前的校验
       validateInfo() {
@@ -479,6 +504,14 @@
         if(that.tableData.canaryReleaseEnable > 0 && (that.tableData.canaryReleaseStageList == null || that.tableData.canaryReleaseStageList.length <= 0)) {
           Message({
             message: '开启了灰度发布但是并未设置内容',
+            type: 'warning',
+            duration: 5 * 1000
+          });
+          return false;
+        }
+        if(!/^\d+(.\d+)*$/.test(that.tableData.versionName)) {
+          Message({
+            message: '版本名输入有误，请检查',
             type: 'warning',
             duration: 5 * 1000
           });
@@ -556,12 +589,9 @@
         })
       },
       httpRequest(data) {
-        console.log("data ",data);
-
         var formData = new FormData();
         formData.append('fileUpload', data.file);
         formData.append('appId', data.data.appId);
-        console.log("debuge ",formData);
         if (!data.data.appId){
           Message({
             message: "appId不能为空",

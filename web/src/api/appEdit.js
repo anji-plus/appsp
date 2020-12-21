@@ -15,6 +15,18 @@ export function getVersionTable(appId, pageNo, pageSize, platform = '') {
     })
 }
 
+// 校验是否可以新增版本
+export function checkVersionState(appId, platform) {
+  const data = {
+      appId: appId,
+      platform: platform
+    }
+  return request({
+      url: '/version/queryVersionState/v1',
+      method: 'post',
+      data
+  })
+}
 
 //版本新增
 export function addVersion(appModel) {
