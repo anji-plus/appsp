@@ -167,7 +167,7 @@ export const otherRoutes = [
       {
         path:'/app/versionAddiOS',
         component: ()=> import("@/views/appEdit/version/edit"),
-        name: '版本新增',
+        name: 'VersionEdit',
         meta: { title: '版本新增', icon: 'dashboard', noCache: false, affix: true }
       },
     ]
@@ -179,7 +179,7 @@ export const otherRoutes = [
       {
         path:'/app/versionAddAndroid',
         component: ()=> import("@/views/appEdit/version/edit"),
-        name: '版本新增',
+        name: 'VersionEdit',
         meta: { title: '版本新增', icon: 'dashboard', noCache: false, affix: true }
       },
     ]
@@ -191,7 +191,7 @@ export const otherRoutes = [
       {
         path:'/app/versionEdit',
         component: ()=> import("@/views/appEdit/version/edit"),
-        name: '版本编辑',
+        name: 'VersionEdit',
         meta: { title: '版本编辑', icon: 'dashboard', noCache: false, affix: true }
       },
     ]

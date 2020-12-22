@@ -169,7 +169,7 @@
   import {Message, Notification} from 'element-ui'
 
   export default {
-    name: '版本新增',
+    name: 'VersionEdit',
     data() {
       return {
         type: 0,
@@ -227,13 +227,14 @@
 
       let info = JSON.parse(sessionStorage.getItem(saveKeys().APP_INFO));
       let appDetail = JSON.parse(sessionStorage.getItem(saveKeys().VERSION_DETAIL));
-      console.log('app版本信息：', appDetail);
+      console.log('appDetail-created：', appDetail);
 
       that.tableData = {};
       that.type = appDetail.type;
       that.tableData = appDetail.data;
       that.published = that.tableData.published
       that.appName = info.appName;
+
       if (that.type == getAppEnums().INSERT) { //新增
         that.title = that.appName + "-" + that.tableData.platform + "新增"
       } else if (that.type == getAppEnums().EDIT) { //编辑

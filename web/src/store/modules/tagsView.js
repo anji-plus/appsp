@@ -8,7 +8,7 @@ const tagsView = {
       if (state.visitedViews.some(v => v.path === view.path)) return
       state.visitedViews.push(
         Object.assign({}, view, {
-          title: view.name || 'no-name'
+          title: view.meta.title || 'no-name'
         })
       )
     },

@@ -70,8 +70,10 @@ chartInfo
       },
       addViewTags() {
         const {name} = this.$route
-        console.log(name, "name-------");
-        if (name && !this.excludePaths.includes(name) && name != '应用管理') {
+        let title = this.$route.meta.title
+        // console.log(this.$route.meta.title, "title-------");
+        // console.log(name, "name-------");
+        if (title && !this.excludePaths.includes(title) && title != '应用管理') {
           this.$store.dispatch('addView', this.$route)
         }
         return false
