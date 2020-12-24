@@ -87,8 +87,8 @@ public class SpVersionServiceImpl implements SpVersionService {
                 sp.setNeedUpdateVersionList(Arrays.asList(needUpdateVersions.split(",")));
             }
 
-            //发布阶段
-            if (StringUtils.isNotEmpty(s.getCanaryReleaseStage())) {
+            //发布阶段 getCanaryReleaseEnable为true才返回releaseStage
+            if (StringUtils.isNotEmpty(s.getCanaryReleaseStage()) && sp.getCanaryReleaseEnable() == UserStatus.OK.getIntegerCode()) {
                 String canaryReleaseStage = s.getCanaryReleaseStage();
                 sp.setCanaryReleaseStageList(Arrays.asList(canaryReleaseStage.split(",")));
             }
