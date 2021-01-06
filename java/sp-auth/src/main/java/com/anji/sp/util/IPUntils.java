@@ -8,19 +8,9 @@ import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author kean
@@ -30,23 +20,21 @@ import java.util.regex.Pattern;
 public class IPUntils {
     // 静态属性,属于类 ,对于任何对象都是唯一的
     private static IPUntils instance;
-    private static DbSearcher searcher;
+    private static DbSearcher searcherInstance;
+//    private static String DB_PATH = "/app/ip2region.db";
+    private static String DB_PATH = IPUntils.class.getResource("/ip/ip2region.db").getPath();
 
     // 私有化构造方法,让外部不可以随意的创建对象
     private IPUntils() {
-        if (null == searcher) {
-//            String dbPath = "/app/ip2region.db";
-            String dbPath = IPUntils.class.getResource("/ip/ip2region.db").getPath();
+        if (null == searcherInstance) {
             try {
                 DbConfig config = new DbConfig();
-                searcher = new DbSearcher(config, dbPath);
+                searcherInstance = new DbSearcher(config, DB_PATH);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
-    ;
 
     // 提供公共的方法，获取唯一的实例对象
     public synchronized static IPUntils getInstance() {
@@ -61,81 +49,23 @@ public class IPUntils {
 //        System.out.println(IPUntils.getInterIP1());
 //        System.out.println(IPUntils.getInterIP2());
 //        System.out.println(IPUntils.getOutIPV4());
-        System.out.println(IPUntils.getInstance().getCityInfo("125.41.185.183"));
-        System.out.println(IPUntils.getInstance().getCityInfo("125.41.185.183"));
-//        System.out.println(IPUntils.getCityInfo("125.41.185.183"));
-    }
-
-
-    public static String getInterIP1() throws Exception {
-        return InetAddress.getLocalHost().getHostAddress();
-    }
-
-    public static String getInterIP2() throws SocketException {
-        String localip = null; // 本地IP，如果没有配置外网IP则返回它
-        String netip = null; // 外网IP
-        Enumeration<NetworkInterface> netInterfaces;
-        netInterfaces = NetworkInterface.getNetworkInterfaces();
-        InetAddress ip = null;
-        boolean finded = false; // 是否找到外网IP
-        while (netInterfaces.hasMoreElements() && !finded) {
-            NetworkInterface ni = netInterfaces.nextElement();
-            Enumeration<InetAddress> address = ni.getInetAddresses();
-            while (address.hasMoreElements()) {
-                ip = address.nextElement();
-                if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) { // 外网IP
-                    netip = ip.getHostAddress();
-                    finded = true;
-                    break;
-                } else if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) { // 内网IP
-                    localip = ip.getHostAddress();
-                }
-            }
+        List<String> isp = new ArrayList<>();
+        isp.add("222.66.93.20");
+        isp.add("117.136.8.118");
+        isp.add("124.77.91.195");
+        isp.add("222.177.24.36");
+        isp.add("58.240.94.147");
+        isp.add("121.36.32.52");
+        isp.addAll(isp);
+        isp.addAll(isp);
+        isp.addAll(isp);
+        for (String ip : isp) {
+            System.out.println(IPUntils.getInstance().getCityInstanceInfo(ip));
         }
-        if (netip != null && !"".equals(netip)) {
-            return netip;
-        } else {
-            return localip;
+        System.out.println("-------");
+        for (String ip : isp) {
+            System.out.println(IPUntils.getInstance().getCityInfo(ip));
         }
-    }
-
-    public static String getOutIPV4() {
-        String ip = "";
-        String chinaz = "http://ip.chinaz.com";
-
-        StringBuilder inputLine = new StringBuilder();
-        String read = "";
-        URL url = null;
-        HttpURLConnection urlConnection = null;
-        BufferedReader in = null;
-        try {
-            url = new URL(chinaz);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
-            while ((read = in.readLine()) != null) {
-                inputLine.append(read + "\r\n");
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        Pattern p = Pattern.compile("\\<dd class\\=\"fz24\">(.*?)\\<\\/dd>");
-        Matcher m = p.matcher(inputLine.toString());
-        System.out.println(m);
-        if (m.find()) {
-            String ipstr = m.group(1);
-            ip = ipstr;
-        }
-        return ip;
     }
 
     /**
@@ -176,6 +106,46 @@ public class IPUntils {
         return ip;
     }
 
+    /**
+     * 单例查询 file 不close 弊端：无法在服务器动态更新.db文件
+     * @param ip
+     * @return
+     */
+    public String getCityInstanceInfo(String ip) {
+        try {
+            //查询算法
+            int algorithm = DbSearcher.BTREE_ALGORITHM; //B-tree
+            Method method = null;
+            switch (algorithm) {
+                case DbSearcher.BTREE_ALGORITHM:
+                    method = searcherInstance.getClass().getMethod("btreeSearch", String.class);
+                    break;
+                case DbSearcher.BINARY_ALGORITHM:
+                    method = searcherInstance.getClass().getMethod("binarySearch", String.class);
+                    break;
+                case DbSearcher.MEMORY_ALGORITYM:
+                    method = searcherInstance.getClass().getMethod("memorySearch", String.class);
+                    break;
+                default:
+                    break;
+            }
+
+            DataBlock dataBlock = null;
+            if (Util.isIpAddress(ip) == false) {
+                log.info("Error: Invalid ip address");
+                return null;
+            }
+
+            dataBlock = (DataBlock) method.invoke(searcherInstance, ip);
+            String s = dataBlock.getRegion();
+//            log.info("dataBlock {}, {}, {}, {}", dataBlock.getRegion(), dataBlock.getCityId(), dataBlock.getDataPtr(), dataBlock.toString());
+            return s;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     /**
      * 获取ip地址城市信息
@@ -190,7 +160,8 @@ public class IPUntils {
         //DbSearcher.BINARY_ALGORITHM //Binary
         //DbSearcher.MEMORY_ALGORITYM //Memory
         try {
-            //define the method
+            DbConfig config = new DbConfig();
+            DbSearcher searcher = new DbSearcher(config, DB_PATH);
             Method method = null;
             switch (algorithm) {
                 case DbSearcher.BTREE_ALGORITHM:
@@ -213,11 +184,10 @@ public class IPUntils {
             }
 
             dataBlock = (DataBlock) method.invoke(searcher, ip);
-
+            String s = dataBlock.getRegion();
 //            log.info("dataBlock {}, {}, {}, {}", dataBlock.getRegion(), dataBlock.getCityId(), dataBlock.getDataPtr(), dataBlock.toString());
-
-            return dataBlock.getRegion();
-
+            searcher.close();
+            return s;
         } catch (Exception e) {
             e.printStackTrace();
         }
