@@ -9,7 +9,6 @@ import org.lionsoul.ip2region.Util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -29,11 +28,42 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class IPUntils {
+    // 静态属性,属于类 ,对于任何对象都是唯一的
+    private static IPUntils instance;
+    private static DbSearcher searcher;
+
+    // 私有化构造方法,让外部不可以随意的创建对象
+    private IPUntils() {
+        if (null == searcher) {
+//            String dbPath = "/app/ip2region.db";
+            String dbPath = IPUntils.class.getResource("/ip/ip2region.db").getPath();
+            try {
+                DbConfig config = new DbConfig();
+                searcher = new DbSearcher(config, dbPath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    ;
+
+    // 提供公共的方法，获取唯一的实例对象
+    public synchronized static IPUntils getInstance() {
+        if (null == instance) {
+            instance = new IPUntils();
+        }
+        return instance;
+    }
+
+
     public static void main(String[] args) throws Exception {
 //        System.out.println(IPUntils.getInterIP1());
 //        System.out.println(IPUntils.getInterIP2());
 //        System.out.println(IPUntils.getOutIPV4());
-        System.out.println(IPUntils.getCityInfo("125.41.185.183"));
+        System.out.println(IPUntils.getInstance().getCityInfo("125.41.185.183"));
+        System.out.println(IPUntils.getInstance().getCityInfo("125.41.185.183"));
+//        System.out.println(IPUntils.getCityInfo("125.41.185.183"));
     }
 
 
@@ -154,24 +184,12 @@ public class IPUntils {
      * @param ip
      * @return
      */
-    public static String getCityInfo(String ip) {
-        //db 本地资源 db
-        String dbPath = IPUntils.class.getResource("/ip/ip2region.db").getPath();
-//        String dbPath = "/app/ip2region.db";
-        File file = new File(dbPath);
-        if (file.exists() == false) {
-            log.info("Error: Invalid ip2region.db file");
-            return null;
-        }
-
+    public String getCityInfo(String ip) {
         //查询算法
         int algorithm = DbSearcher.BTREE_ALGORITHM; //B-tree
         //DbSearcher.BINARY_ALGORITHM //Binary
         //DbSearcher.MEMORY_ALGORITYM //Memory
         try {
-            DbConfig config = new DbConfig();
-            DbSearcher searcher = new DbSearcher(config, dbPath);
-
             //define the method
             Method method = null;
             switch (algorithm) {

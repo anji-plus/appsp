@@ -407,7 +407,7 @@ public class SpAppReqServiceImpl implements SpAppReqService {
      */
     private SpAppLogVO voConvert(SpAppLogVO spAppLogVO, HttpServletRequest request) {
         String ipAddress = IPUntils.getIpAddress(request);
-        String regional = IPUntils.getCityInfo(ipAddress);
+        String regional = IPUntils.getInstance().getCityInfo(ipAddress);
         if (Objects.isNull(regional)) {
             regional = "0|0|0|0|0";
         }
