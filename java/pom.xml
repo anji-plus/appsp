@@ -37,7 +37,6 @@
         <apk.parser.version>2.6.10</apk.parser.version>
         <redisson.version>3.6.5</redisson.version>
         <mybatis.plus.boot.starter.version>3.3.2</mybatis.plus.boot.starter.version>
-        <checkstyle.config.location>/code_template/allways_checkstyle.xml</checkstyle.config.location>
     </properties>
 
     <dependencyManagement>
@@ -259,94 +258,6 @@
         </dependency>
 
     </dependencies>
-
-
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-site-plugin</artifactId>-->
-<!--            </plugin>-->
-
-<!--            &lt;!&ndash; checkstyle &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-checkstyle-plugin</artifactId>-->
-<!--                <version>3.0.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>compile</id>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <configLocation>${checkstyle.config.location}</configLocation>-->
-<!--                            <failOnViolation>true</failOnViolation>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-
-<!--            <plugin>-->
-<!--                <groupId>org.codehaus.mojo</groupId>-->
-<!--                <artifactId>findbugs-maven-plugin</artifactId>-->
-<!--                <version>3.0.5</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>compile</id>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-
-<!--            &lt;!&ndash; PMD插件 &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-pmd-plugin</artifactId>-->
-<!--                <version>3.8</version>-->
-<!--                <configuration>-->
-<!--                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>-->
-<!--                    <targetJdk>${java.version}</targetJdk>-->
-<!--                    <printFailingErrors>true</printFailingErrors>-->
-<!--                    &lt;!&ndash; 代码检查规则 &ndash;&gt;-->
-<!--                    <rulesets>-->
-<!--                        <ruleset>rulesets/java/ali-comment.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-concurrent.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-constant.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-exception.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-flowcontrol.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-naming.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-oop.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-orm.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-other.xml</ruleset>-->
-<!--                        <ruleset>rulesets/java/ali-set.xml</ruleset>-->
-<!--                    </rulesets>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>pmd-check-verify</id>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                &lt;!&ndash; p3c依赖 &ndash;&gt;-->
-<!--                <dependencies>-->
-<!--                    <dependency>-->
-<!--                        <groupId>com.alibaba.p3c</groupId>-->
-<!--                        <artifactId>p3c-pmd</artifactId>-->
-<!--                        <version>1.3.5</version>-->
-<!--                    </dependency>-->
-<!--                </dependencies>-->
-<!--            </plugin>-->
-
-<!--        </plugins>-->
-<!--    </build>-->
 
     <build>
         <plugins>
