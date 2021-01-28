@@ -25,30 +25,30 @@
 
 ### 演示图
 #### 应用管理
-![01](./img/md01.png)
+![01](http://open-appsp.anji-plus.com/sp/file/download/md01.png)
 
 #### 版本管理
-![02](./img/md02.png)
+![02](http://open-appsp.anji-plus.com/sp/file/download/md02.png)
 
-![03](./img/md03.png)
+![03](http://open-appsp.anji-plus.com/sp/file/download/md03.png)
 
 #### 公告管理
-![04](./img/md04.png)
+![04](http://open-appsp.anji-plus.com/sp/file/download/md04.png)
 
-![05](./img/md05.png)
+![05](http://open-appsp.anji-plus.com/sp/file/download/md05.png)
 
 #### 基础配置
-![06](./img/md06.png)
+![06](http://open-appsp.anji-plus.com/sp/file/download/md06.png)
 
 #### 成员管理
-![07](./img/md07.png)
+![07](http://open-appsp.anji-plus.com/sp/file/download/md07.png)
 
 #### app演示
-![08](./img/appsp-app.gif)
+![08](http://open-appsp.anji-plus.com/sp/file/download/appsp-app.gif)
 
 
 #### 技术支持微信群
-![09](./img/zhichi.jpg)
+![09](http://open-appsp.anji-plus.com/sp/file/download/zhichi.png)
 
 
  #### 开源不易，劳烦各位star ☺
