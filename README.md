@@ -44,7 +44,7 @@
 ![07](http://open-appsp.anji-plus.com/sp/file/download/md07.png)
 
 #### app演示
-![08](http://open-appsp.anji-plus.com/sp/file/download/appsp-app.gif)
+![08](http://open-appsp.anji-plus.com/sp/file/download/appspapp.gif)
 
 
 #### 技术支持微信群
